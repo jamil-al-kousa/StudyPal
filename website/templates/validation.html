@@ -1,0 +1,393 @@
+{% extends "base.html" %} {% block title %} {{ content.header }} {% endblock %}
+{% block content %}
+
+<div class="grid">
+  <div class="blankTop">
+    <!-- Ska bara synas om man är moderator -->
+    <div id="moderatorMenu">
+      <button id="moderatorBtn1">Approve</button>
+      <button id="moderatorBtn2">Dissapprove</button>
+    </div>
+  </div>
+  <div class="leftInfo">
+    <h1 class="courseName">{{ categorization.course_name }}</h1>
+    <h3>{{ content.header }}</h3>
+    <p>University: {{ categorization.university }}</p>
+  </div>
+  <div class="rightInfo">
+    <p>Author: <strong>{{ content.username }}</strong></p>
+    <p>Uploaded: {{ timestamp.date }}</p>
+  </div>
+  <div class="infoBlankTop"></div>
+  <div class="infoBar">
+    <div class="infoBarBox">
+      <div class="content1">
+        <!-- Koppla så när jag klickar på ämnet kommer jag till söksidan för ämnet? -->
+        <strong> Subject: &nbsp;</strong>{{ categorization.subject }}
+      </div>
+      <div class="verticalDivider1"></div>
+      <div class="content2">
+        <strong> Rating: &nbsp;</strong> {{ votes.upvotes - votes.downvotes }}
+      </div>
+      <div class="verticalDivider2"></div>
+      <div class="content3">
+        <strong> Comment: &nbsp;</strong> {{ content.upload_comment }}
+      </div>
+    </div>
+  </div>
+  <div class="infoBlankBottom"></div>
+  <div class="documentView">
+    <div class="buttonBar"></div>
+    <iframe src="{{ download_url }}#toolbar=0" frameborder="0"></iframe>
+  </div>
+  <div class="commentView">
+    <div class="commentViewBox"></div>
+  </div>
+  <div class="blankFooter"></div>
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: 1.76fr 1fr;
+    grid-template-rows: 60px 200px 100px 100px auto 100px;
+
+    /* Vilken font vill vi ha??? */
+    font-family: "montserrat", sans-serif;
+  }
+  .blankFooter {
+    grid-column: 1 / span 2;
+    grid-row: 6;
+  }
+
+  .blankTop {
+    grid-row: 1;
+    grid-column: 1 / span 2;
+    /* background-color: #efefef; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .leftInfo,
+  .rightInfo {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    background-color: #efefef;
+  }
+
+  .leftInfo {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    padding-left: 40px;
+  }
+
+  .rightInfo {
+    grid-column: 2;
+    grid-row: 2;
+    text-align: right;
+    padding-right: 40px;
+    font-size: large;
+  }
+
+  .infoBlankTop {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    background-color: #efefef;
+  }
+  .infoBlankBottom {
+    grid-column: 1 / span 2;
+    grid-row: 4;
+  }
+
+  .infoBar,
+  .infoBarBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .infoBar {
+    grid-column: 1 / span 2;
+    grid-row: 3 / 5;
+  }
+  .infoBarBox {
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    margin: auto;
+    border: 2px solid #e4e4e4;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    width: 93%;
+    height: 100px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .content1,
+  .content2,
+  .content3 {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content3 a {
+    text-decoration: none; /* Removes the underline from links */
+    color: inherit; /* Inherits the text color from the parent element */
+  }
+
+  .content3 a:hover {
+    text-decoration: underline; /* Adds underline on hover for better indication */
+  }
+
+  .verticalDivider1,
+  .verticalDivider2 {
+    height: 50%;
+    width: 1px;
+    background-color: #ccc;
+  }
+
+  .documentView {
+    grid-column: 1/2;
+    grid-row: 5;
+    background-color: #efefef;
+    margin-left: 5.5%;
+    margin-right: 10px;
+    border: 2px solid #e4e4e4;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .documentView iframe {
+    width: 100%;
+    height: 700px;
+  }
+
+  .buttonBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  #downloadIcon,
+  #flagIcon {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .buttonBar i:hover {
+    transform: scale(1.2);
+  }
+
+  #flagIcon {
+    margin-left: auto;
+    padding-right: 40px;
+    color: red;
+  }
+  #downloadIcon {
+    padding-left: 40px;
+  }
+
+  .courseName {
+    font-weight: bold;
+    color: #333333;
+  }
+
+  #greenhand {
+    color: rgb(65, 240, 79);
+  }
+
+  #blackHand {
+    color: black;
+  }
+
+  #redHand {
+    color: red;
+  }
+
+  .rateBtnContainer {
+    border: #000;
+    border-style: solid;
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-radius: 40px;
+  }
+
+  .pdf_frame {
+    height: 100%;
+    width: 100%;
+  }
+  .pdf-viewer {
+    position: relative;
+    height: 500px; /* Or whatever size you prefer */
+    overflow: auto;
+  }
+
+  #pdf-canvas {
+    width: 100%;
+    height: auto;
+    border: 1px solid #000; /* For visual separation */
+  }
+
+  .comment-section {
+    margin-top: 20px;
+  }
+
+  .comment {
+    padding: 10px 0;
+    /* border: 2px solid #efefef; */
+    /* border-bottom: 1px solid #ccc; */
+    /* border-radius: 20px; */
+    margin-bottom: 15px;
+  }
+
+  .comment-avatar {
+    margin-right: 10px;
+  }
+
+  .comment-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .comment-content {
+    flex-grow: 1;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px solid #efefef;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .comment-text {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .commentButtons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-left: 50%;
+    font-size: 18px;
+  }
+
+  .commentButtons i:hover {
+    transform: scale(1.2);
+  }
+
+  .commentButtons i {
+    cursor: pointer;
+  }
+
+  #commentFlag {
+    color: red;
+  }
+  #commentReply {
+    color: rgb(1, 111, 255);
+    font-size: 18px;
+  }
+
+  #moderatorMenu {
+    text-align: center; /* Center-align the buttons */
+    padding: 20px; /* Add some padding around the buttons for spacing */
+    /* background-color: #f5f5f5; Light grey background for a subtle look */
+  }
+
+  #moderatorBtn1,
+  #moderatorBtn2 {
+    background-color: #ffffff; /* White background for the buttons */
+    color: #333333; /* Dark text color for contrast */
+    border: 1px solid #ddd; /* Light border for definition */
+    padding: 10px 20px; /* Padding inside the buttons */
+    margin: 0 5px; /* Space between buttons */
+    border-radius: 5px; /* Slightly rounded corners for the buttons */
+    font-size: 16px; /* Moderate font size */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+  }
+  #moderatorBtn1 {
+    background-color: lightgreen;
+  }
+  #moderatorBtn2 {
+    background-color: lightcoral;
+  }
+
+  #moderatorBtn3 {
+    background-color: #ffffff; /* White background for the buttons */
+    color: red; /* Dark text color for contrast */
+    border: 1px solid red; /* Light border for definition */
+    padding: 10px 20px; /* Padding inside the buttons */
+    margin: 0 5px; /* Space between buttons */
+    border-radius: 5px; /* Slightly rounded corners for the buttons */
+    font-size: 16px; /* Moderate font size */
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  #moderatorBtn1:hover,
+  #moderatorBtn2:hover,
+  #moderatorBtn3:hover {
+    background-color: #e9ecef; /* Slightly darker background on hover */
+    cursor: pointer; /* Change cursor to pointer to indicate clickable */
+  }
+</style>
+
+<script type="module">
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import firebaseConfig from "{{ url_for('static', filename='firebase-cfg.js') }}";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  function approveDocument(documentId) {
+    fetch(`/validate_document/${documentId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ approve: true }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert("Document has been approved.");
+        window.location.href = "/moderator_panel";
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  function disapproveDocument(documentId) {
+    fetch(`/validate_document/${documentId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ approve: false }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert("Document has been disapproved.");
+        window.location.href = "/moderator_panel";
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  document
+    .getElementById("moderatorBtn1")
+    .addEventListener("click", () => approveDocument("{{ document_id }}"));
+  document
+    .getElementById("moderatorBtn2")
+    .addEventListener("click", () => disapproveDocument("{{ document_id }}"));
+</script>
+
+{% endblock %}
